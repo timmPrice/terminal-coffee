@@ -4,7 +4,6 @@ import shutil
 import math
 import random
 
-# ascii_gradient = [" ", "(", ")", "1", "{", "}", "[", "]", "?", "-", "_", "+", "~", "<", ">", "i", "!", "l", "I", ";", ":", "^"]
 ascii_gradient = [" ","(",  ")", "{", "}", ".", ":", "@"]
 
 ascii = """
