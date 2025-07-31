@@ -4,7 +4,9 @@ import shutil
 import math
 import random
 
-ascii_gradient = [" ", "(", ")", "1", "{", "}", "[", "]", "?", "-", "_", "+", "~", "<", ">", "i", "!", "l", "I", ";", ":", "^"]
+# ascii_gradient = [" ", "(", ")", "1", "{", "}", "[", "]", "?", "-", "_", "+", "~", "<", ">", "i", "!", "l", "I", ";", ":", "^"]
+ascii_gradient = [" ","(",  ")", "{", "}", ".", ":", "@"]
+
 ascii = """
                  .........  ..   ...  .. ..........                 
            :::::::::XXXXXx+++++;;;;;;++++xxXXXXX:::::::::           
@@ -38,26 +40,38 @@ def get_terminal_size():
     return cols, rows 
 
 def print_ascii_center(cols, rows):
-    steam_block = steam(4)
     for _ in range(math.floor(rows / 2)):
         print()
     
-    lines = steam(4) + ascii.strip("\n").splitlines()
+    lines = steam(19) + ascii.strip("\n").splitlines()
     centered = [line.center(cols) for line in lines]
     print("\n".join(centered))
 
 def steam(height):
     lines = []
-    for line in range(height):
-        lines.append(steam_line(35, height))
+    shape = gen_widths(height, 45)
+    for i in range(len(shape)):
+        lines.append(steam_line(shape[i], height - i + 1))
     return lines
 
 def steam_line(width, height) -> str:
+    weights = [10 * height] + [1] * (len(ascii_gradient) - 1)
     line = ""
     for char in range(width):
-        num = random.randint(0, len(ascii_gradient) - 1)
-        line += ascii_gradient[num]
+        line += random.choices(ascii_gradient, weights = weights, k = 1)[0]
+    
     return line
+
+# could make this a nicer shape later... looks nice for now (I think the centering may be saving it)
+def gen_widths(height, width):
+    shape = []
+
+    counter = 1
+    for i in range(height):
+        shape.append(counter + 1)  
+        counter += 1
+    return shape
+         
 
 def main():
     cols, rows = get_terminal_size() 
@@ -65,7 +79,7 @@ def main():
         while True:
             os.system("clear")
             print_ascii_center(cols, rows)
-            time.sleep(0.2)
+            time.sleep(0.4)
     except KeyboardInterrupt:         
         print()
 
