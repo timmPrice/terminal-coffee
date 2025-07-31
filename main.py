@@ -6,7 +6,6 @@ import random
 
 ascii_gradient = [" ", "(", ")", "1", "{", "}", "[", "]", "?", "-", "_", "+", "~", "<", ">", "i", "!", "l", "I", ";", ":", "^"]
 ascii = """
-                      ...  .     ..:..   . ...                      
                  .........  ..   ...  .. ..........                 
            :::::::::XXXXXx+++++;;;;;;++++xxXXXXX:::::::::           
            :::XXXXXXXXXXXXXxxx+++++++xxxxXXXXXXXXXXXXX:::           
@@ -43,7 +42,7 @@ def print_ascii_center(cols, rows):
     for _ in range(math.floor(rows / 2)):
         print()
     
-    lines = steam(4) + ascii.splitlines()
+    lines = steam(4) + ascii.strip("\n").splitlines()
     centered = [line.center(cols) for line in lines]
     print("\n".join(centered))
 
