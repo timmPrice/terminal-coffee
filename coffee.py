@@ -1,8 +1,12 @@
+from pynput import keyboard
 import os
 import time
 import shutil
 import math
 import random
+import sys
+import termios
+
 
 ascii_gradient = [" ","(",  ")", "{", "}", ".", ":", "@"]
 
@@ -48,7 +52,7 @@ def print_ascii_center(cols, rows):
 
 def steam(height):
     lines = []
-    shape = gen_widths(height, 45)
+    shape = gen_widths(height)
     for i in range(len(shape)):
         lines.append(steam_line(shape[i], height - i + 1))
     return lines
@@ -56,31 +60,43 @@ def steam(height):
 def steam_line(width, height) -> str:
     weights = [10 * height] + [1] * (len(ascii_gradient) - 1)
     line = ""
-    for char in range(width):
+    for _ in range(width):
         line += random.choices(ascii_gradient, weights = weights, k = 1)[0]
     
     return line
 
-# could make this a nicer shape later... looks nice for now (I think the centering may be saving it)
-def gen_widths(height, width):
+def gen_widths(height):
     shape = []
 
     counter = 1
-    for i in range(height):
+    for _ in range(height):
         shape.append(counter + 1)  
         counter += 1
     return shape
-         
+        
+def on_press(key):
+    try: 
+        if key.char == 'q':
+            return False
+    except AttributeError:
+        pass
+        
 
 def main():
     cols, rows = get_terminal_size() 
+    
+    listener = keyboard.Listener(on_press=on_press) # type: ignore
+    listener.start()
+
     try:
-        while True:
+        while listener.running:
             os.system("clear")
             print_ascii_center(cols, rows)
             time.sleep(0.4)
-    except KeyboardInterrupt:         
-        print()
+    except KeyboardInterrupt:
+        pass
+    
+    termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
 if __name__ == "__main__":
     main()
